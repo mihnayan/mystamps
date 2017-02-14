@@ -37,12 +37,6 @@ import lombok.RequiredArgsConstructor;
 import ru.mystamps.web.support.jdbc.RowMappers;
 
 // FIXME: move stamps related methods to separate interface (#88)
-@SuppressWarnings({
-	"PMD.AvoidDuplicateLiterals",
-	"PMD.TooManyMethods",
-	"PMD.TooManyFields",
-	"PMD.LongVariable"
-})
 @RequiredArgsConstructor
 public class JdbcSeriesDao implements SeriesDao {
 	
