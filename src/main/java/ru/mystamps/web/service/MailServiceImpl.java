@@ -21,9 +21,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.apache.commons.lang3.time.DatePrinter;
@@ -33,21 +30,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.context.MessageSource;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 
 import ru.mystamps.web.Url;
 import ru.mystamps.web.service.dto.AdminDailyReport;
 import ru.mystamps.web.service.dto.SendUsersActivationDto;
-import ru.mystamps.web.service.exception.EmailSendingException;
 
 public class MailServiceImpl implements MailService {
 	private static final Logger LOG = LoggerFactory.getLogger(MailServiceImpl.class);
 	
-	private final JavaMailSender mailer;
+	private final MailgunEmailSendingStrategy mailer;
 	private final MessageSource messageSource;
 	private final String adminEmail;
 	private final Locale adminLang;
@@ -66,7 +59,7 @@ public class MailServiceImpl implements MailService {
 		boolean testMode) {
 		
 		this.reportService = reportService;
-		this.mailer = mailer;
+		this.mailer = new SmtpMailgunEmailSendingStrategy(mailer);
 		this.messageSource = messageSource;
 		this.adminEmail = adminEmail;
 		this.adminLang = adminLang;
@@ -84,7 +77,7 @@ public class MailServiceImpl implements MailService {
 		Validate.isTrue(activation.getLang() != null, "Language must be non null");
 		Validate.isTrue(activation.getActivationKey() != null, "Activation key must be non null");
 		
-		sendMail(
+		mailer.send(
 			activation.getEmail(),
 			robotEmail,
 			"My Stamps",
@@ -104,7 +97,7 @@ public class MailServiceImpl implements MailService {
 	@Override
 	@Async
 	public void sendDailyStatisticsToAdmin(AdminDailyReport report) {
-		sendMail(
+		mailer.send(
 			adminEmail,
 			robotEmail,
 			"My Stamps",
@@ -122,47 +115,6 @@ public class MailServiceImpl implements MailService {
 			adminEmail,
 			adminLang
 		);
-	}
-	
-	@SuppressWarnings("PMD.UseObjectForClearerAPI")
-	private void sendMail(
-		final String toEmail,
-		final String fromEmail,
-		final String fromName,
-		final String subject,
-		final String text,
-		final String tag,
-		final boolean testMode) {
-		
-		try {
-			// We're using MimeMessagePreparator only because of its capability of adding headers.
-			// Otherwise we would use SimpleMailMessage class.
-			MimeMessagePreparator preparator = new MimeMessagePreparator() {
-				@Override
-				@SuppressWarnings({
-					"PMD.SignatureDeclareThrowsException", "PMD.AccessorMethodGeneration"
-				})
-				public void prepare(MimeMessage mimeMessage) throws Exception {
-					MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
-					message.setValidateAddresses(true);
-					message.setTo(toEmail);
-					message.setFrom(new InternetAddress(fromEmail, fromName, "UTF-8"));
-					message.setSubject(subject);
-					message.setText(text);
-					
-					// see: https://documentation.mailgun.com/en/latest/user_manual.html#sending-via-smtp
-					message.getMimeMessage().addHeader("X-Mailgun-Tag", tag);
-					if (testMode) {
-						message.getMimeMessage().addHeader("X-Mailgun-Drop-Message", "yes");
-					}
-				}
-			};
-			
-			mailer.send(preparator);
-			
-		} catch (MailException ex) {
-			throw new EmailSendingException("Can't send mail to e-mail " + toEmail, ex);
-		}
 	}
 	
 	private String getTextOfActivationMail(SendUsersActivationDto activation) {
