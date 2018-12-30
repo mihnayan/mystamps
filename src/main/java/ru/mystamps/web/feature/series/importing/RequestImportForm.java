@@ -40,6 +40,9 @@ import static ru.mystamps.web.validation.ValidationRules.IMPORT_REQUEST_URL_MAX_
 })
 public class RequestImportForm implements RequestImportDto {
 	
+	// IMPORTANT:
+	// keep in mind that this form is also used for requesting an import of a series sale
+	
 	@NotEmpty(groups = Group.Level1.class)
 	@Size(
 		max = IMPORT_REQUEST_URL_MAX_LENGTH,

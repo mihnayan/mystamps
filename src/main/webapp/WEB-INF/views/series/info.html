@@ -707,6 +707,37 @@
 								</div>
 							</div>
 							
+							<div class="row" togglz:active="ADD_PURCHASES_AND_SALES" sec:authorize="hasAuthority('ADD_SERIES_SALES')">
+								<div class="col-sm-12">
+									<h5 th:text="|#{t_import_info_who_selling_series}:|">
+										Import info about selling this series:
+									</h5>
+									<form class="form-horizontal">
+										
+										<div class="form-group form-group-sm">
+											<label for="series-sale-url" class="control-label col-sm-3">
+												<span th:remove="tag" th:text="#{t_url}">
+													URL
+												</span>
+												<span class="required_field">*</span>
+											</label>
+											<div class="col-sm-6">
+												<input type="url" id="series-sale-url" class="form-control" required="required" />
+											</div>
+										</div>
+										
+										<div class="form-group form-group-sm">
+											<div class="col-sm-offset-3 col-sm-4">
+												<button type="button" class="btn btn-primary" th:text="#{t_import_info}">
+													Import info
+												</button>
+											</div>
+										</div>
+										
+									</form>
+								</div>
+							</div>
+							
 						</div>
 						
 					</div>
