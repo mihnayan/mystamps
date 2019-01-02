@@ -14,7 +14,8 @@
 		<link rel="stylesheet" href="https://cdn.rawgit.com/usrz/bootstrap-languages/3ac2a3d2b27ac43a471cd99e79d378a03b2c6b5f/languages.min.css" th:href="${BOOTSTRAP_LANGUAGE}" />
 		<link rel="stylesheet" href="../../static/styles/main.css" th:href="${MAIN_CSS}" />
 	</head>
-	<body>
+	<!-- XXX: use real URL -->
+	<body onload="initPage('http://localhost:8080/series/sales/import')">
 		<div class="container-fluid">
 			<div class="row" id="header">
 				<div id="logo" class="col-sm-9 vcenter">
@@ -712,7 +713,7 @@
 									<h5 th:text="|#{t_import_info_who_selling_series}:|">
 										Import info about selling this series:
 									</h5>
-									<form class="form-horizontal">
+									<form id="import-series-sale-form" class="form-horizontal">
 										
 										<div class="form-group form-group-sm">
 											<label for="series-sale-url" class="control-label col-sm-3">
@@ -728,7 +729,7 @@
 										
 										<div class="form-group form-group-sm">
 											<div class="col-sm-offset-3 col-sm-4">
-												<button type="button" class="btn btn-primary" th:text="#{t_import_info}">
+												<button id="series-sale-submit-btn" type="submit" class="btn btn-primary" th:text="#{t_import_info}">
 													Import info
 												</button>
 											</div>
