@@ -14,7 +14,7 @@
 		<link rel="stylesheet" href="https://cdn.rawgit.com/usrz/bootstrap-languages/3ac2a3d2b27ac43a471cd99e79d378a03b2c6b5f/languages.min.css" th:href="${BOOTSTRAP_LANGUAGE}" />
 		<link rel="stylesheet" href="../../static/styles/main.css" th:href="${MAIN_CSS}" />
 	</head>
-	<body onload="initPage(null)" th:onload="|initPage('__@{${IMPORT_SERIES_SALE_PAGE}}__')|">
+	<body>
 		<div class="container-fluid">
 			<div class="row" id="header">
 				<div id="logo" class="col-sm-9 vcenter">
@@ -762,6 +762,21 @@
 		/*/-->
 		<script src="../../../../javascript/DateUtils.js" th:src="${DATE_UTILS_JS}"></script>
 		<script src="../../../../javascript/series/info.js" th:src="${SERIES_INFO_JS}"></script>
+		<script th:inline="javascript">
+			$(document).ready(function() {
+				/*[+
+				initPage(
+					[['__@{${IMPORT_SERIES_SALE_PAGE}}__']],
+					[[${_csrf.headerName}]],
+					[[${_csrf.token}]]
+				);
+				+]*/
+				
+				/*[- */
+				initPage();
+				/* -]*/
+			});
+		</script>
 		<!--/*/
 		</th:block>
 		/*/-->

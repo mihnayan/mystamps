@@ -3,7 +3,7 @@
 // You must update Url.RESOURCES_VERSION each time whenever you're modified this file!
 //
 
-function initPage(importSeriesSaleUrl) {
+function initPage(importSeriesSaleUrl, csrfHeaderName, csrfTokenValue) {
 	if (importSeriesSaleUrl != null) {
 		$('#import-series-sale-form').on('submit', function sendImportRequest(event) {
 			event.preventDefault();
@@ -14,17 +14,18 @@ function initPage(importSeriesSaleUrl) {
 			}
 			
 			// XXX: handle errors gracefully
-			// XXX: handle CSP
-			// XXX: pass CSRF-token
 			// XXX: disable form during submission
 			// XXX: add JS code for prototype
 			var data = JSON.stringify({
 				url: url
 			});
+			var headers = {};
+			headers[csrfHeaderName] = csrfTokenValue;
 			$.ajax({
 				url: importSeriesSaleUrl,
 				method: 'POST',
 				contentType: 'application/json; charset=UTF-8',
+				headers: headers,
 				data: data
 					
 			}).done(function populateAddSeriesSaleForm(result) {
