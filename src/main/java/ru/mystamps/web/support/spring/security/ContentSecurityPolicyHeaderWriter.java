@@ -20,6 +20,8 @@ package ru.mystamps.web.support.spring.security;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.security.web.header.HeaderWriter;
 
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,11 @@ import ru.mystamps.web.Url;
 class ContentSecurityPolicyHeaderWriter implements HeaderWriter {
 
 	private static final String COLLECTION_INFO_PAGE_PATTERN =
-		Url.INFO_COLLECTION_PAGE.replace("{slug}", "");
+		Url.INFO_COLLECTION_PAGE.replace("{slug}", StringUtils.EMPTY);
+	
+	// FIXME: use Pattern class
+	private static final String SERIES_INFO_PAGE_PATTERN =
+		Url.INFO_SERIES_PAGE.replace("{id}", "(\\d+|\\d+/(ask|image))");
 	
 	private static final String ADD_IMAGE_PAGE_PATTERN = "/series/(add|\\d+|\\d+/(ask|image))";
 	
@@ -138,7 +144,8 @@ class ContentSecurityPolicyHeaderWriter implements HeaderWriter {
 	// - 'https://www.gstatic.com' is required by Google Charts
 	private static final String SCRIPT_COLLECTION_INFO = " 'unsafe-eval' https://www.gstatic.com";
 	
-	// - 'self' is required for AJAX requests from our scripts (country suggestions on /series/add)
+	// - 'self' is required for AJAX requests from our scripts
+	// (country suggestions on /series/add and series sale import on /series/{id})
 	private static final String CONNECT_SRC = "connect-src 'self'";
 	
 	// - 'self' is required for frames on H2 webconsole
@@ -209,6 +216,10 @@ class ContentSecurityPolicyHeaderWriter implements HeaderWriter {
 		} else if (onH2ConsolePage) {
 			sb.append(SEPARATOR)
 			  .append(CHILD_SRC);
+		} else if (uri.matches(SERIES_INFO_PAGE_PATTERN)) {
+			// FIXME: anonymous and users without permissions actually don't need this directive
+			sb.append(SEPARATOR)
+			  .append(CONNECT_SRC);
 		}
 		
 		return sb.toString();

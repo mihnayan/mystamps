@@ -57,6 +57,8 @@ public final class Url {
 	public static final String REQUEST_IMPORT_PAGE        = "/series/import/request/{id}";
 	public static final String LIST_IMPORT_REQUESTS_PAGE  = "/series/import/requests";
 	
+	public static final String IMPORT_SERIES_SALE_PAGE    = "/series/sales/import";
+	
 	public static final String SUGGEST_SERIES_CATEGORY    = "/suggest/series_category";
 	public static final String SUGGEST_SERIES_COUNTRY     = "/suggest/series_country";
 	
@@ -155,6 +157,7 @@ public final class Url {
 		map.put("INFO_COUNTRY_PAGE", INFO_COUNTRY_PAGE);
 		map.put("INFO_SERIES_PAGE", INFO_SERIES_PAGE);
 		map.put("LIST_IMPORT_REQUESTS_PAGE", LIST_IMPORT_REQUESTS_PAGE);
+		map.put("IMPORT_SERIES_SALE_PAGE", IMPORT_SERIES_SALE_PAGE);
 		map.put("LOGIN_PAGE", LOGIN_PAGE);
 		map.put("LOGOUT_PAGE", LOGOUT_PAGE);
 		map.put("PUBLIC_URL", production ? PUBLIC_URL : SITE);

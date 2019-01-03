@@ -123,7 +123,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 			.csrf()
 				// Allow unsecured requests to H2 consoles.
-				.ignoringAntMatchers(Url.H2_CONSOLE_PAGE + "/**", "/series/sales/import") // XXX: remove
+				.ignoringAntMatchers(Url.H2_CONSOLE_PAGE + "/**", Url.IMPORT_SERIES_SALE_PAGE) // XXX: remove
 				.and()
 			.rememberMe()
 				// TODO: GH #27

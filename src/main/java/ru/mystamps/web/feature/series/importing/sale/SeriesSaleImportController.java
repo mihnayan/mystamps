@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import ru.mystamps.web.Url;
 import ru.mystamps.web.feature.series.importing.RawParsedDataDto;
 import ru.mystamps.web.feature.series.importing.RequestImportForm;
 import ru.mystamps.web.feature.series.importing.SeriesExtractedInfo;
@@ -46,10 +47,9 @@ public class SeriesSaleImportController {
 	private final SiteParserService siteParserService;
 	private final SeriesInfoExtractorService extractorService;
 	
-	// XXX: extract constant
 	// XXX: secure URL
 	// XXX: validate URL
-	@PostMapping(path = "/series/sales/import")
+	@PostMapping(Url.IMPORT_SERIES_SALE_PAGE)
 	public SeriesSaleExtractedInfo downloadAndParse(@RequestBody @Valid RequestImportForm form) {
 		// XXX: introduce service
 		

@@ -14,8 +14,7 @@
 		<link rel="stylesheet" href="https://cdn.rawgit.com/usrz/bootstrap-languages/3ac2a3d2b27ac43a471cd99e79d378a03b2c6b5f/languages.min.css" th:href="${BOOTSTRAP_LANGUAGE}" />
 		<link rel="stylesheet" href="../../static/styles/main.css" th:href="${MAIN_CSS}" />
 	</head>
-	<!-- XXX: use real URL -->
-	<body onload="initPage('http://localhost:8080/series/sales/import')">
+	<body onload="initPage(null)" th:onload="|initPage('__@{${IMPORT_SERIES_SALE_PAGE}}__')|">
 		<div class="container-fluid">
 			<div class="row" id="header">
 				<div id="logo" class="col-sm-9 vcenter">
