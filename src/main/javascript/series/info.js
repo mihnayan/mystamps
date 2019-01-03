@@ -13,14 +13,16 @@ function initPage(importSeriesSaleUrl, csrfHeaderName, csrfTokenValue) {
 				return;
 			}
 			
+			disableImportSeriesSaleForm();
+			
 			// XXX: handle errors gracefully
-			// XXX: disable form during submission
 			// XXX: add JS code for prototype
 			var data = JSON.stringify({
 				url: url
 			});
 			var headers = {};
 			headers[csrfHeaderName] = csrfTokenValue;
+			
 			$.ajax({
 				url: importSeriesSaleUrl,
 				method: 'POST',
@@ -28,6 +30,9 @@ function initPage(importSeriesSaleUrl, csrfHeaderName, csrfTokenValue) {
 				headers: headers,
 				data: data
 					
+			}).always(function enableSubmitButton() {
+				enableImportSeriesSaleForm();
+			
 			}).done(function populateAddSeriesSaleForm(result) {
 				var urlField = $('#series-sale-url');
 				var url = urlField.val();
@@ -43,6 +48,16 @@ function initPage(importSeriesSaleUrl, csrfHeaderName, csrfTokenValue) {
 			});
 		});
 	}
+}
+
+function disableImportSeriesSaleForm() {
+	$('#series-sale-submit-btn').prop('disabled', true);
+	$('#series-sale-url').prop('disabled', true);
+}
+
+function enableImportSeriesSaleForm() {
+	$('#series-sale-submit-btn').prop('disabled', false);
+	$('#series-sale-url').prop('disabled', false);
 }
 
 function populateTransactionDateWithTodayDate() {
