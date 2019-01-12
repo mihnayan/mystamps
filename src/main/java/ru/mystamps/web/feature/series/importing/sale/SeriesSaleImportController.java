@@ -19,8 +19,6 @@ package ru.mystamps.web.feature.series.importing.sale;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,85 +26,22 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import ru.mystamps.web.Url;
-import ru.mystamps.web.feature.series.importing.RawParsedDataDto;
 import ru.mystamps.web.feature.series.importing.RequestImportForm;
-import ru.mystamps.web.feature.series.importing.SeriesExtractedInfo;
-import ru.mystamps.web.feature.series.importing.SeriesInfoExtractorService;
-import ru.mystamps.web.feature.series.importing.extractor.SeriesInfo;
-import ru.mystamps.web.feature.series.importing.extractor.SiteParser;
-import ru.mystamps.web.feature.series.importing.extractor.SiteParserService;
-import ru.mystamps.web.service.DownloaderService;
-import ru.mystamps.web.service.dto.DownloadResult;
 
 @RestController
 @RequiredArgsConstructor
 public class SeriesSaleImportController {
 	
-	private final Logger log;
-	private final DownloaderService downloaderService;
-	private final SiteParserService siteParserService;
-	private final SeriesInfoExtractorService extractorService;
+	private final SeriesSalesImportService seriesSalesImportService;
 	
 	// XXX: secure URL
 	// XXX: validate URL
+	// XXX: validate that we have a site parser for that URL
 	@PostMapping(Url.IMPORT_SERIES_SALE_PAGE)
 	public SeriesSaleExtractedInfo downloadAndParse(@RequestBody @Valid RequestImportForm form) {
-		// XXX: introduce service
-		
-		String url = form.getUrl();
-		
-		log.info("Start downloading '{}'", url);
-		
-		DownloadResult result = downloaderService.download(url);
-		if (result.hasFailed()) {
-			log.info("Downloading of '{}' failed: {}", url, result.getCode());
-			// XXX: return an error
-			return null;
-		}
-		
-		log.info("Downloading succeeded");
-		
-		SiteParser parser = siteParserService.findForUrl(url);
-		if (parser == null) {
-			log.error("Could not find appropriate parser");
-			// XXX: return an error
-			return null;
-		}
-		
-		String content = result.getDataAsString();
-		
-		SeriesInfo info = parser.parse(content);
-		if (info.isEmpty()) {
-			// XXX: return an error
-			return null;
-		}
-		
-		// XXX: don't process unrelated fields
-		RawParsedDataDto data = new RawParsedDataDto(
-			info.getCategoryName(),
-			info.getCountryName(),
-			info.getImageUrl(),
-			info.getIssueDate(),
-			info.getQuantity(),
-			info.getPerforated(),
-			info.getMichelNumbers(),
-			info.getSellerName(),
-			info.getSellerUrl(),
-			info.getPrice(),
-			info.getCurrency()
-		);
-		
-		SeriesExtractedInfo seriesInfo = extractorService.extract(url, data);
-		
-		return new SeriesSaleExtractedInfo(
-			seriesInfo.getSellerId(),
-			seriesInfo.getSellerName(),
-			seriesInfo.getSellerUrl(),
-			seriesInfo.getSellerGroupId(),
-			seriesInfo.getPrice(),
-			seriesInfo.getCurrency()
+		return seriesSalesImportService.downloadAndParse(
+			form.getUrl()
 		);
 	}
-	
 	
 }

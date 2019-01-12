@@ -18,6 +18,7 @@
 package ru.mystamps.web.feature.series.importing.sale;
 
 public interface SeriesSalesImportService {
+	SeriesSaleExtractedInfo downloadAndParse(String url);
 	void saveParsedData(Integer requestId, SeriesSalesParsedDataDbDto seriesSalesParsedData);
 	SeriesSaleParsedDataDto getParsedData(Integer requestId);
 }
